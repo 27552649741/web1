@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="GBK">
+    <title>Title</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        .container{
+            width: 420px;
+            height: 320px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+            padding: 20px;
+            z-index: 130;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 3px 18px rgba(100, 0, 0, .5);
+            font-size: 16px;
+        }
+        .layui-input {
+            border-radius: 5px;
+            width: 300px;
+            height: 40px;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="app">
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" v-model="userInfo.username"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+            <label class="layui-form-label">密 &nbsp;&nbsp;码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="password" v-model="userInfo.password" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="email" v-model="userInfo.email" placeholder="请输入邮箱地址" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="tel" v-model="userInfo.tel" placeholder="请输入电话号码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div style="text-align: center">
+                <button class="layui-btn layui-btn-blue" @click="btn()">
+                    注册
+                </button>
+                <br/>
+                <br/>
+                <a href="login.html">已有账号立即登录</a>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+<script src="layui/layui.all.js"></script>
+<script src="static/js/vue.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var app = new Vue({
+        el:"#app",
+        data:{
+            userInfo:{}
+        },
+        methods:{
+            btn(){
+                if (this.userInfo.username==""||this.userInfo.password==""||this.userInfo.email==""||this.userInfo.tel==""){
+                    layer.alert('用户名和密码不能为空', {
+                        skin: 'layui-layer-molv',
+                        title: '提示',
+                        closeBtn: 0,
+                    })
+                    return;
+                }
+                axios.post("/user/register.do",this.userInfo).then(function (response) {
+                    if (response.data.code==404){
+                        layer.alert(response.data.extend.info, {
+                            skin: 'layui-layer-molv',
+                            title: '提示',
+                            closeBtn: 0,
+                        })
+                    }
+                    else{
+                        window.location.href='login.html';
+                    }
+                })
+            }
+        },
+    })
+</script>
+</html>
